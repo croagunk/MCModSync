@@ -36,6 +36,7 @@
             this.OKButton.TabIndex = 5;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // RepositoryUrl
             // 
@@ -46,7 +47,7 @@
             // 
             // DialogMessage
             // 
-            this.DialogMessage.Location = new System.Drawing.Point(12, 11);
+            this.DialogMessage.Location = new System.Drawing.Point(12, 12);
             this.DialogMessage.Name = "DialogMessage";
             this.DialogMessage.Size = new System.Drawing.Size(410, 50);
             this.DialogMessage.TabIndex = 3;
@@ -55,6 +56,7 @@
             // 
             // RepositoryConfigDialog
             // 
+            this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
@@ -70,6 +72,7 @@
             this.Name = "RepositoryConfigDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "リポジトリ設定";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RepositoryConfigDialog_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

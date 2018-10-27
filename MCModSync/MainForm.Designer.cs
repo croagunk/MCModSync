@@ -23,6 +23,7 @@
         /// コード エディターで変更しないでください。
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.RepositoryUrl = new System.Windows.Forms.TextBox();
@@ -35,9 +36,16 @@
             this.LocalModList = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.CheckModUpdate = new System.Windows.Forms.Button();
+            this.ErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.Dummy = new System.Windows.Forms.Label();
+            this.ModListProgressBar = new System.Windows.Forms.ProgressBar();
+            this.FileSystemWatcher = new System.IO.FileSystemWatcher();
+            this.ModCount = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FileSystemWatcher)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -100,11 +108,14 @@
             // 
             this.MinecraftProfileList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MinecraftProfileList.FormattingEnabled = true;
+            this.ErrorProvider.SetIconPadding(this.MinecraftProfileList, 5);
             this.MinecraftProfileList.Location = new System.Drawing.Point(80, 3);
             this.MinecraftProfileList.Name = "MinecraftProfileList";
-            this.MinecraftProfileList.Size = new System.Drawing.Size(327, 23);
+            this.MinecraftProfileList.Size = new System.Drawing.Size(305, 23);
             this.MinecraftProfileList.TabIndex = 1;
             this.MinecraftProfileList.TabStop = false;
+            this.MinecraftProfileList.SelectedIndexChanged += new System.EventHandler(this.MinecraftProfileList_SelectedIndexChanged);
+            this.MinecraftProfileList.MouseEnter += new System.EventHandler(this.FocusToControl);
             // 
             // label2
             // 
@@ -118,6 +129,8 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.ModCount);
+            this.panel3.Controls.Add(this.ModListProgressBar);
             this.panel3.Controls.Add(this.LocalModList);
             this.panel3.Controls.Add(this.label3);
             this.panel3.Location = new System.Drawing.Point(12, 102);
@@ -127,12 +140,15 @@
             // 
             // LocalModList
             // 
+            this.LocalModList.CheckOnClick = true;
             this.LocalModList.FormattingEnabled = true;
             this.LocalModList.Location = new System.Drawing.Point(8, 23);
             this.LocalModList.Name = "LocalModList";
             this.LocalModList.Size = new System.Drawing.Size(399, 184);
             this.LocalModList.TabIndex = 1;
             this.LocalModList.TabStop = false;
+            this.LocalModList.MouseEnter += new System.EventHandler(this.FocusToControl);
+            this.LocalModList.MouseLeave += new System.EventHandler(this.FocusToDummy);
             // 
             // label3
             // 
@@ -153,6 +169,42 @@
             this.CheckModUpdate.TabStop = false;
             this.CheckModUpdate.Text = "Mod の更新を確認";
             this.CheckModUpdate.UseVisualStyleBackColor = true;
+            this.CheckModUpdate.Click += new System.EventHandler(this.CheckModUpdate_Click);
+            // 
+            // ErrorProvider
+            // 
+            this.ErrorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.ErrorProvider.ContainerControl = this;
+            // 
+            // Dummy
+            // 
+            this.Dummy.Location = new System.Drawing.Point(0, 0);
+            this.Dummy.Name = "Dummy";
+            this.Dummy.Size = new System.Drawing.Size(0, 0);
+            this.Dummy.TabIndex = 8;
+            // 
+            // ModListProgressBar
+            // 
+            this.ModListProgressBar.Location = new System.Drawing.Point(118, 108);
+            this.ModListProgressBar.MarqueeAnimationSpeed = 1;
+            this.ModListProgressBar.Name = "ModListProgressBar";
+            this.ModListProgressBar.Size = new System.Drawing.Size(175, 14);
+            this.ModListProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.ModListProgressBar.TabIndex = 2;
+            this.ModListProgressBar.Visible = false;
+            // 
+            // FileSystemWatcher
+            // 
+            this.FileSystemWatcher.SynchronizingObject = this;
+            this.FileSystemWatcher.Changed += new System.IO.FileSystemEventHandler(this.FileSystemWatcher_Changed);
+            // 
+            // ModCount
+            // 
+            this.ModCount.Location = new System.Drawing.Point(366, 5);
+            this.ModCount.Name = "ModCount";
+            this.ModCount.Size = new System.Drawing.Size(41, 15);
+            this.ModCount.TabIndex = 3;
+            this.ModCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainForm
             // 
@@ -160,6 +212,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(434, 361);
+            this.Controls.Add(this.Dummy);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel3);
@@ -172,12 +225,17 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MCModSync";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Click += new System.EventHandler(this.FocusToDummy);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ErrorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.FileSystemWatcher)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -195,6 +253,11 @@
         private System.Windows.Forms.CheckedListBox LocalModList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button CheckModUpdate;
+        private System.Windows.Forms.ErrorProvider ErrorProvider;
+        private System.Windows.Forms.Label Dummy;
+        private System.Windows.Forms.ProgressBar ModListProgressBar;
+        private System.IO.FileSystemWatcher FileSystemWatcher;
+        private System.Windows.Forms.Label ModCount;
     }
 }
 
