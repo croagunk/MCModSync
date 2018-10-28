@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -73,6 +74,7 @@ namespace MCModSync {
             return r;
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         private Dictionary<string, string> GetLocalMods() {
             var r = new Dictionary<string, string>();
 
@@ -95,7 +97,7 @@ namespace MCModSync {
             return r;
         }
 
-        private async void UpdateLocalMods() {
+        private void UpdateLocalMods() {
             updating = true;
 
             ModCount.Text = string.Empty;
@@ -105,9 +107,7 @@ namespace MCModSync {
             ModListProgressBar.Visible = true;
 
             if (selectedProfileIndex != -1) {
-                await Task.Run(() => {
-                    localMods = GetLocalMods();
-                });
+                localMods = Task.Run(() => GetLocalMods()).Result;
                 foreach (var mod in localMods) {
                     var name = mod.Key;
                     LocalModList.Items.Add(name, config.ExcludedMods.Contains(name));
@@ -151,7 +151,6 @@ namespace MCModSync {
             }
    
             // update mod list
-            if (MinecraftProfileList.SelectedIndex == _i) return;
             UpdateLocalMods();
         }
 

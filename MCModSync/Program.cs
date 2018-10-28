@@ -52,7 +52,7 @@ namespace MCModSync {
             if (url == null) {
                 var config = Config.Load();
                 url = config.RepositoryUrl;
-                if (url != string.Empty && !url.EndsWith("/")) { url += "/"; }
+                if (!(url == string.Empty || url == null) && !url.EndsWith("/")) { url += "/"; }
                 config.RepositoryUrl = url;
             }
 
