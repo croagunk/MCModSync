@@ -18,7 +18,6 @@ namespace MCModSync {
         private Config config = null;
         private List<Profile> profiles = null;
         private int selectedProfileIndex = -1;
-        //private Dictionary<string, string> localMods = null;
         private Dictionary<string, string> localMods = null;
         private bool updating = false;
 
@@ -179,8 +178,7 @@ namespace MCModSync {
                     hash = builder.ToString();
                 }
             } catch (Exception ex) {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
+                Debug.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
             }
 
             return hash;
@@ -356,8 +354,7 @@ namespace MCModSync {
                         try {
                             wc.DownloadFileAsync(new Uri(config.RepositoryUrl + @"/" + version + @"/" + mod.Key), moddir + @"\" + mod.Key);
                         } catch (Exception ex) {
-                            Debug.WriteLine(ex.Message);
-                            Debug.WriteLine(ex.StackTrace);
+                            Debug.WriteLine(ex.Message + Environment.NewLine + ex.StackTrace);
                             failed++;
                         }
                         await Task.Run(() => System.Threading.Thread.Sleep(100));
